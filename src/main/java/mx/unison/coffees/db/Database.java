@@ -1,8 +1,6 @@
 package mx.unison.coffees.db;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -18,58 +16,92 @@ import java.util.logging.Logger;
 public class Database {
 
     private static final String CLASS_NAME = Database.class.getSimpleName();
-    private static final Logger LOGGER = Logger.getLogger(CLASS_NAME);
+    private static final Logger LOG = Logger.getLogger(CLASS_NAME);
 
     private Connection con;
 
-    //URL que identifica a la base de datos que nos queremos conectar
-    //private final String DB_URL = "jdbc:mysql://148.225.64.69:3306/db210215739";
-    //private final String DB_URL = "jdbc:mysql://localhost:3306/COFFEES";
-    private static final String DB_URL = "jdbc:postgresql://localhost:5432/coffeesdb";
-
-    //Driver de JDBC que vamos a usar para conectarnos a la base de datos
+     //Driver de JDBC que vamos a usar para conectarnos a la base de datos
     private static final String DRIVER = "org.postgresql.Driver";
 
    // Objeto singleton
     private static Database DB = null;
 
+    private Properties configuration;
+
     // Constructor privado para implementar Singleton
     private Database() {
+
         super();
+        con = null;
+
+        configuration = new Properties();
+
+        String dbUrl = null;
+        String user = "nobody";
+        String password = "nobody";
+        String driver = null;
+        try {
+            configuration.load(new FileInputStream("coffee_crud.properties"));
+            LOG.info("Properties file loaded.");
+            dbUrl = configuration.getProperty("DB_URL");
+            user = configuration.getProperty("DB_USER");
+            password = configuration.getProperty("DB_PASSWORD");
+            driver = configuration.getProperty("DRIVER");
+        } catch (IOException e) {
+            LOG.severe( e.getMessage() );
+        }
+
+        try {
+            // Cargar el driver
+            Class.forName(driver);
+            Properties props = new Properties();
+            props.setProperty("user", user);
+            props.setProperty("password", password);
+            // Abrir una conexion a la base de datos
+            con = DriverManager.getConnection(dbUrl, props);
+
+        } catch (ClassNotFoundException ex) {
+            LOG.severe(ex.getMessage() );
+
+        } catch (SQLException ex) {
+            LOG.severe("Error: " + ex.getMessage());
+            LOG.severe("Codigo : " + ex.getErrorCode());
+        }
     }
 
-    private Properties properties ;
+
     private Database(String user, String password) {
         super();
         con = null;
 
-        properties = new Properties();
-        try {
-            properties.load(new FileInputStream(new File("coffee_crud.properties")));
-            System.out.printf("Properties file loaded.\n");
+        configuration = new Properties();
 
-        } catch (FileNotFoundException e) {
-            LOGGER.severe(e.getMessage() );
+        String dbUrl = null;
+        try {
+            configuration.load(new FileInputStream("coffee_crud.properties"));
+            LOG.info("Properties file loaded.");
+
+            dbUrl = configuration.getProperty("DB_URL");
+
         } catch (IOException e) {
-            LOGGER.severe(e.getMessage() );
+            LOG.severe( e.getMessage() );
         }
 
         try {
-
             // Cargar el driver
             Class.forName(DRIVER);
             Properties props = new Properties();
             props.setProperty("user", user);
             props.setProperty("password", password);
             // Abrir una conexion a la base de datos
-            con = DriverManager.getConnection(DB_URL, props);
+            con = DriverManager.getConnection(dbUrl, props);
 
         } catch (ClassNotFoundException ex) {
-            LOGGER.severe(ex.getMessage() );
+            LOG.severe(ex.getMessage() );
 
         } catch (SQLException ex) {
-            LOGGER.severe("Error: " + ex.getMessage());
-            LOGGER.severe("Codigo : " + ex.getErrorCode());
+            LOG.severe("Error: " + ex.getMessage());
+            LOG.severe("Codigo : " + ex.getErrorCode());
         }
     }
 
@@ -77,6 +109,13 @@ public class Database {
     public static Database getDatabase(String user, String pass) {
         if (DB == null) {
             DB = new Database(user, pass);
+        }
+        return DB;
+    }
+
+    public static Database getDatabase() {
+        if (DB == null) {
+            DB = new Database();
         }
         return DB;
     }

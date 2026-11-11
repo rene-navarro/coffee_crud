@@ -206,6 +206,7 @@ public class InsertCoffeesDialog extends javax.swing.JDialog {
         String ventas = txtVentas.getText();
         String total = txtTotal.getText();
 
+        // Construir la sentencia SQL para insertar un nuevo café
         StringBuilder sql
                 = new StringBuilder("INSERT INTO coffees (COF_NAME,SUP_ID,PRICE,SALES,TOTAL) VALUES (\'");
         sql.append(nombre);

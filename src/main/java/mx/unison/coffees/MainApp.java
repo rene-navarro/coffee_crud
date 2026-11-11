@@ -7,6 +7,7 @@ package mx.unison.coffees;/*
 import mx.unison.coffees.db.Database;
 import mx.unison.coffees.db.JDBCTableAdapter;
 
+import javax.swing.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
@@ -17,12 +18,9 @@ import java.util.logging.Logger;
 public class MainApp extends javax.swing.JFrame {
 
     private static final String CLASS_NAME = MainApp.class.getSimpleName();
-    private static final Logger LOGGER = Logger.getLogger(CLASS_NAME);
+    private static final Logger LOG = Logger.getLogger(CLASS_NAME);
 
-    //private final String USER = "usr210215739";
-    //private final String PASS = "pw210215739";
-    private final String USER = "developer";
-    private final String PASS = "codemonkey";
+
     final private Database db;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
@@ -65,9 +63,16 @@ public class MainApp extends javax.swing.JFrame {
      */
     public MainApp() {
         //Abrir la conexión a la base de datos
-        db = Database.getDatabase(USER, PASS);
+
         initComponents();
         this.setSize(800, 600);
+
+        db = Database.getDatabase();
+        if(db == null) {
+            JOptionPane.showMessageDialog(this, "No se pudo abrir la base de datos",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            LOG.severe("No se pudo abrir la base de datos");
+        }
     }
 
     /**
@@ -382,8 +387,8 @@ public class MainApp extends javax.swing.JFrame {
             this.desktopPane.add(browser);
 
         } catch (SQLException ex) {
-            LOGGER.severe("Error: " + ex.getMessage());
-            LOGGER.severe("Codigo : " + ex.getErrorCode());
+            LOG.severe("Error: " + ex.getMessage());
+            LOG.severe("Codigo : " + ex.getErrorCode());
         }
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
@@ -414,8 +419,8 @@ public class MainApp extends javax.swing.JFrame {
             this.desktopPane.add(browser);
 
         } catch (SQLException ex) {
-            LOGGER.severe("Error: " + ex.getMessage());
-            LOGGER.severe("Codigo : " + ex.getErrorCode());
+            LOG.severe("Error: " + ex.getMessage());
+            LOG.severe("Codigo : " + ex.getErrorCode());
 
         }
 
@@ -434,8 +439,8 @@ public class MainApp extends javax.swing.JFrame {
             this.desktopPane.add(browser);
 
         } catch (SQLException ex) {
-            LOGGER.severe("Error: " + ex.getMessage());
-            LOGGER.severe("Codigo : " + ex.getErrorCode());
+            LOG.severe("Error: " + ex.getMessage());
+            LOG.severe("Codigo : " + ex.getErrorCode());
         }
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
@@ -452,8 +457,8 @@ public class MainApp extends javax.swing.JFrame {
             this.desktopPane.add(browser);
 
         } catch (SQLException ex) {
-            LOGGER.severe("Error: " + ex.getMessage());
-            LOGGER.severe("Codigo : " + ex.getErrorCode());
+            LOG.severe("Error: " + ex.getMessage());
+            LOG.severe("Codigo : " + ex.getErrorCode());
         }
     }//GEN-LAST:event_jMenuItem9ActionPerformed
 
@@ -470,8 +475,8 @@ public class MainApp extends javax.swing.JFrame {
             this.desktopPane.add(browser);
 
         } catch (SQLException ex) {
-            LOGGER.severe("Error: " + ex.getMessage());
-            LOGGER.severe("Codigo : " + ex.getErrorCode());
+            LOG.severe("Error: " + ex.getMessage());
+            LOG.severe("Codigo : " + ex.getErrorCode());
         }
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 

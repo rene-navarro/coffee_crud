@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
 public class JDBCTableAdapter extends DefaultTableModel {
 
     private static final String CLASS_NAME = JDBCTableAdapter.class.getSimpleName();
-    private static final Logger LOGGER = Logger.getLogger(CLASS_NAME);
+    private static final Logger LOG = Logger.getLogger(CLASS_NAME);
 
     private String tableName;
     private String sqlColumnNames[];
@@ -72,8 +72,8 @@ public class JDBCTableAdapter extends DefaultTableModel {
             }
 
         } catch (SQLException ex) {
-            LOGGER.severe("Error: " + ex.getMessage());
-            LOGGER.severe("Codigo : " + ex.getErrorCode());
+            LOG.severe("Error: " + ex.getMessage());
+            LOG.severe("Codigo : " + ex.getErrorCode());
         }
         this.setDataVector(data, columnNames);
       
@@ -111,7 +111,7 @@ public class JDBCTableAdapter extends DefaultTableModel {
                 sqlColumnNames[c] = metaData.getColumnLabel(i);
                 sqlColumnTypes[c] = metaData.getColumnType(i);
                 names[c++] = metaData.getColumnLabel(i);
-                System.out.println(s);
+                //System.out.println(s);
             }
 
             // Mover cursor al ultimo renglon
@@ -134,8 +134,8 @@ public class JDBCTableAdapter extends DefaultTableModel {
                 r++;
             }
         } catch (SQLException ex) {
-            LOGGER.severe("Error: " + ex.getMessage());
-            LOGGER.severe("Codigo : " + ex.getErrorCode());
+            LOG.severe("Error: " + ex.getMessage());
+            LOG.severe("Codigo : " + ex.getErrorCode());
         }
         
         this.setDataVector(data, names);
